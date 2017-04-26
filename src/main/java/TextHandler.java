@@ -141,25 +141,7 @@ public class TextHandler {
         return res;
     }
 
-    public static void main(String[] args)throws IOException
-    {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String param = br.readLine();
-
-        if(param.isEmpty()){
-            System.out.println("ecnm");
-        }
-
-        List<File> test = new ArrayList<>();
-        TextHandler th = new TextHandler();
-        th.doSort(test,param);
-
-
-        System.out.println(param);
-
-
-    }
     public List<File> createWorkList(File searchDirectory, String filesIgnored ){
 
         List <File> res = new ArrayList<>();
