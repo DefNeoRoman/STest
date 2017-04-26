@@ -188,7 +188,7 @@ public class TextHandler {
 
             }
             else if (checkWithRegExp("^(-anyword)\\(.+",filesIgnored)){
-                System.out.println("Ветка anyword");
+                System.out.println("branch anyword");
                 //Исключить из поиска файлы которые подходят под описание через пробел
                 File[] wList = searchDirectory.listFiles();
                 List <File> notIgnor = new ArrayList<>();
@@ -213,7 +213,7 @@ public class TextHandler {
             }
 
             else if (checkWithRegExp("\\-.+",filesIgnored)){
-                System.out.println("Ветка minus");
+                System.out.println("branch minus");
                 //Ветка исключения для одного файла который подходит под описание
 
                 File[] wList = searchDirectory.listFiles();
@@ -248,20 +248,20 @@ public class TextHandler {
         List<File> sortedResult;
 
         if (sv.equals("bydate") ){
-            System.out.println("ветка bydate");
+            System.out.println("branch bydate");
             sortVariant = SortVars.BYDATE;
 
             sortedResult = FileSorter.sortByDate(nonSort);
 
 
         }else        if (sv.equals("bysize")){
-            System.out.println("ветка bysize");
+            System.out.println("branch bysize");
             sortVariant = SortVars.BYSIZE;
 
             sortedResult = FileSorter.sortBySize(nonSort);
         }
         else {
-            System.out.println("ветка byname");
+            System.out.println("branch byname");
             sortVariant = SortVars.BYNAME;
 
             sortedResult = FileSorter.sortByname(nonSort);

@@ -21,14 +21,14 @@ public class Main {
 
             FileWriter writer = new FileWriter("result.txt", false);
 
-            System.out.println("Какую директорию сканируем?");
+            System.out.println("What directory will be scanning?");
 
             String directoryName = br.readLine();
             if (directoryName == null){
-                throw new Exception("ошибка: не задана папка");
+                throw new Exception("Error: directory is not specified");
             }
 
-            System.out.println("Ключ для игнора");
+            System.out.println("What is the key to ignore?");
 
             String filesIgnored = br.readLine();
             if (filesIgnored.isEmpty()){
@@ -36,14 +36,14 @@ public class Main {
             }
 
 
-            System.out.println("Какая сортировка?");
+            System.out.println("What type of sorting?");
 
             String sortParam = br.readLine();
             if (sortParam.isEmpty() ){
                 sortParam = "byname";
             }
             TextHandler th = new TextHandler(directoryName,filesIgnored.toLowerCase(),sortParam);
-            System.out.println("принято" + directoryName + filesIgnored + sortParam );
+          
             th.run();
 
             List<File> listFiles =  th.getCurrentList();
@@ -53,20 +53,20 @@ public class Main {
                 File curObject = listFiles.get(i);
 
                 if(curObject.isDirectory()) {
-                    String text = curObject.getName() + " (папка)" + "Был создан " + new Date(curObject.lastModified());
+                    String text = curObject.getName() + " (directory)" + "Was created " + new Date(curObject.lastModified());
                     writer.write(text);
                     writer.write("\n");
                 }
                 else {
                     String text = curObject.getName()
-                            + " (" + curObject.length() + " байт)" + "Был создан " + new Date(curObject.lastModified());
+                            + " (" + curObject.length() + " byte)" + "Was created" + new Date(curObject.lastModified());
                     writer.write(text);
                     writer.write("\n");
                 }
             }
-            System.out.println("Найдено " + th.getFilesNumber() +
-                    " файлов и " + th.getDirectoriesNumber() +
-                    " папок." + "общий размер:" + th.getTotalLength());
+            System.out.println("was found " + th.getFilesNumber() +
+                    " files and " + th.getDirectoriesNumber() +
+                    " directories." + "full size:" + th.getTotalLength());
             writer.close();
         }
 
