@@ -37,7 +37,7 @@
                 <manifest>
                     <addClasspath>true</addClasspath>
                     <classpathPrefix>libs/</classpathPrefix>
-                    <mainClass>a1s.client.App</mainClass>
+                    <mainClass>Main</mainClass>
                 </manifest>
             </archive>
         </configuration>
