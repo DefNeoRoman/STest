@@ -12,6 +12,9 @@ public class Main {
 
     public static void main(String[] args) {
 
+        if(args.length > 0)  //если через консоль были введены аргументы
+            System.out.println("Parameter was Catched" + args[0]);
+
 
         try(BufferedReader br = new BufferedReader(new InputStreamReader(System.in)))
         {
