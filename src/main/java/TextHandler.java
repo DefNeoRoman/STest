@@ -86,7 +86,7 @@ public class TextHandler {
         List  result = new ArrayList();
         try {
             if(lf == null) {
-                throw new Exception("Ошибка: не заданы параметры поиска");
+                throw new Exception("the error parameter is not specified");
             }
 
 
@@ -149,7 +149,7 @@ public class TextHandler {
         try{
 
             if(filesIgnored == ""){
-                System.out.println("Ветка default");
+                System.out.println("branch default");
                 File[] wList = searchDirectory.listFiles();
                 //Положили в коллекцию
                 for(int i=0; i<wList.length; i++){
@@ -158,7 +158,7 @@ public class TextHandler {
 
 
             } else if(checkWithRegExp("-db",filesIgnored)){
-                System.out.println("Ветка db");
+                System.out.println("branch db");
                 //Исключение для какого - то конкретного расширения
                 File[] wList = searchDirectory.listFiles(new FileExcluder("-db"));
                 //Положили в коллекцию
