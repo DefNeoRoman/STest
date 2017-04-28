@@ -1,74 +1,68 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.InputStreamReader;
-import java.util.Date;
+import java.io.*;
+import java.util.ArrayList;
+
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Created by Пользователь on 26.04.2017.
  */
 public class Main {
 
-    public static void main(String[] args) {
 
-        if(args.length > 0)  //если через консоль были введены аргументы
-            System.out.println("Parameter was Catched" + args[0]);
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(System.in)))
-        {
-            FileWriter writer = new FileWriter("result.txt", false);
+    final static int tpDepth = 4; // Количество нитей в тредпуле
+    // 4 ядерный процессор = 4 нити (самый минимум),
+    // при условии, что в массив аргуемнтов может вводится много путей для поиска
 
-            System.out.println("What directory will be scanning?");
-            String directoryName = br.readLine();
-            if (directoryName == null){
-                throw new Exception("Error: directory is not specified");
+
+    String key;//Здесь будет сам ключ
+
+    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
+        List<String> myPaths = new ArrayList<>(); //массив для входных параметров, сюда будут попадать пути до ключа
+        List<String> ignor = new ArrayList<>(); //Массив для полных путей, которые будем игнорировать,
+        // сюда будут попадать пути, которые будт после ключа
+        int keyPosition =0;
+        List<Entity> result = new ArrayList<>();
+
+        for (int i = 0; i < args.length; i++){
+
+
+            if (keyPosition == 0){
+                myPaths.add(args[i]);
+            }else {
+                String h = args[i].replaceAll("-", "");
+                ignor.add(h);
+                System.out.println(h);
             }
-            System.out.println("What is the key to ignore?");
-            String filesIgnored = br.readLine();
-            if (filesIgnored.isEmpty()){
-                filesIgnored = "";
+
+            if(args[i].contains("-")){
+                keyPosition = i;
             }
-            System.out.println("What type of sorting?");
-            String sortParam = br.readLine();
-            if (sortParam.isEmpty() ){
-                sortParam = "byname";
-            }
-            TextHandler th = new TextHandler(directoryName,filesIgnored.toLowerCase(),sortParam);
-          
-            th.run();
-
-            List<File> listFiles =  th.getCurrentList();
 
 
-            for(int i = 0; i < listFiles.size(); i++) {
-                File curObject = listFiles.get(i);
 
-                if(curObject.isDirectory()) {
-                    String text = curObject.getName() + " (directory)" + "Was created " + new Date(curObject.lastModified());
-                    writer.write(text);
-                    writer.write("\n");
-                }
-                else {
-                    String text = curObject.getName()
-                            + " (" + curObject.length() + " byte)" + "Was created" + new Date(curObject.lastModified());
-                    writer.write(text);
-                    writer.write("\n");
-                }
-            }
-            System.out.println("was found " + th.getFilesNumber() +
-                    " files and " + th.getDirectoriesNumber() +
-                    " directories." + "full size:" + th.getTotalLength());
-            writer.close();
         }
-
-        catch(Exception ex){
-
-            System.out.println(ex.getMessage());
+        long start = System.currentTimeMillis();
+        ExecutorService service =  Executors.newFixedThreadPool(tpDepth);
+        for (String s: myPaths){
+            MyTask t = new MyTask(s,ignor);
+            Future<List<Entity>> future = service.submit(t);
+            List<Entity> le = future.get();
+            result.addAll(le);
         }
 
 
+        long finish = System.currentTimeMillis();
+        long timeConsumedMillis = finish - start;
+        System.out.println("найдено файлов:" + result.size());
+        result.forEach(System.out::println);
+        System.out.println("Время выполнения:" + timeConsumedMillis);
 
 
     }
+
 
 }
