@@ -8,61 +8,48 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * Created by Пользователь on 26.04.2017.
+ * Запуск всех тестов сразу через maven
  */
 public class Main {
-
-
     final static int tpDepth = 4; // Количество нитей в тредпуле
     // 4 ядерный процессор = 4 нити (самый минимум),
     // при условии, что в массив аргуемнтов может вводится много путей для поиска
-
-
     String key;//Здесь будет сам ключ
-
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         List<String> myPaths = new ArrayList<>(); //массив для входных параметров, сюда будут попадать пути до ключа
-        List<String> ignor = new ArrayList<>(); //Массив для полных путей, которые будем игнорировать,
+        List<String> ignor = new ArrayList<>(); //Массив для файлов, которые будем игнорировать,
         // сюда будут попадать пути, которые будт после ключа
-        int keyPosition =0;
-        List<Entity> result = new ArrayList<>();
-
-        for (int i = 0; i < args.length; i++){
-
-
-            if (keyPosition == 0){
-                myPaths.add(args[i]);
-            }else {
-                String h = args[i].replaceAll("-", "");
-                ignor.add(h);
-                System.out.println(h);
-            }
-
-            if(args[i].contains("-")){
+        int keyPosition = 0;
+        List<Entity> result = new ArrayList<>();// ArrayList для результатов
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].contains("-")) {
                 keyPosition = i;
+                String h = args[i].replaceAll("-", "");//Возможность добавления ключей через еще один if
+                ignor.add(h);
             }
-
-
-
+            if (keyPosition == 0) {
+                myPaths.add(args[i]); // Добавляем пути,
+                // предварительно заменив в командной строке вот такие слэши "\" на вот эти "/"
+            } else {
+                String h = args[i]; // Добавляем файлы, которые будем исключать из поиска
+                ignor.add(h);
+            }
         }
-        long start = System.currentTimeMillis();
-        ExecutorService service =  Executors.newFixedThreadPool(tpDepth);
-        for (String s: myPaths){
-            MyTask t = new MyTask(s,ignor);
-            Future<List<Entity>> future = service.submit(t);
+        ExecutorService service = Executors.newFixedThreadPool(tpDepth); // Реализация многопоточности:
+        // был создан тредпул из 4 тредов которым выдавались задачи на выполнение, то есть каждый тред на каждый каталог
+        for (String s : myPaths) {
+            MyTask t = new MyTask(s, ignor); //Передаем параметры в задачу
+            Future<List<Entity>> future = service.submit(t); // Кладем в тредпул
             List<Entity> le = future.get();
             result.addAll(le);
         }
+        FileWriter writer = new FileWriter("result.txt", false);
+        result.forEach(f -> {
+            try {
+                writer.write(f.toString()); // Пишем в файл
+            } catch (IOException e) {
 
-
-        long finish = System.currentTimeMillis();
-        long timeConsumedMillis = finish - start;
-        System.out.println("найдено файлов:" + result.size());
-        result.forEach(System.out::println);
-        System.out.println("Время выполнения:" + timeConsumedMillis);
-
-
+            }
+        });
     }
-
-
 }
