@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
-/**
- * Created by Пользователь on 28.04.2017.
- */
 public class MyTask implements Callable<List<Entity>> {
     private String myPath;
     private List<String> ignorList;
@@ -21,7 +18,8 @@ public class MyTask implements Callable<List<Entity>> {
     public List<Entity> call() throws Exception {
         List<Entity> myfiles = new ArrayList<>();
         Path startPath = FileSystems.getDefault().getPath(myPath);
-        Files.walk(startPath).parallel().filter(f -> { //Многопоточность реализована в Java 8
+
+        Files.walk(startPath).filter(f -> {  //Многопоточность реализована в Java 8
             if (ignorList.contains(f.getFileName().toString())
                     ) {
                 return false;
