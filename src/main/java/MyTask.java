@@ -1,3 +1,4 @@
+//Как угодно может называться только не MyTask(FileWalker)
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,8 +20,9 @@ public class MyTask implements Callable<List<Entity>> {
         List<Entity> myfiles = new ArrayList<>();
         Path startPath = FileSystems.getDefault().getPath(myPath);
 
-        Files.walk(startPath).filter(f -> {  //Многопоточность реализована в Java 8
-            if (ignorList.contains(f.getFileName().toString())
+        Files.walk(startPath).filter(f -> {  //если добавить .parallel(), то ничего не произойдет
+            if (ignorList.contains(f.getFileName().toString())// Здесь нужно 
+               // использовать Set, так как он с методом contains работает сразу Set <Entity>
                     ) {
                 return false;
             }
@@ -32,7 +34,8 @@ public class MyTask implements Callable<List<Entity>> {
                             new Date(f.toFile().lastModified()),
                             f.toFile().length()));
         });
-        List<Entity> res = myfiles.stream().sorted(new EntityComparator()).collect(Collectors.toList());
+        List<Entity> res = myfiles.stream().sorted(new EntityComparator()).collect(Collectors.toList());//Сортировку делать сразу,
+        //не надо создавать отдельный лист результатов
         //Сортируем по дате, если надо отсортировать в другом порядке, то создаем свой компаратор и в нем  задаем условие сортировки
         return res;
     }
