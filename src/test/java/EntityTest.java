@@ -1,3 +1,4 @@
+//Убрать тесты на Entity, так как никто не проверяет никогда геттеры и сеттеры
 import org.junit.Test;
 import java.util.Date;
 import static org.junit.Assert.*;
