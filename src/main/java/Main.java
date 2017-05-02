@@ -47,6 +47,7 @@ public class Main {
             for (String s : myPaths) {
                 MyTask t = new MyTask(s, ignor); //Передаем параметры в задачу
                 Future<List<Entity>> future = service.submit(t); // Кладем в тредпул
+                //Future - это незавершенное задание, подробнее почитать
                 List<Entity> le = future.get();
                 result.addAll(le);
             }
@@ -55,6 +56,7 @@ public class Main {
             result.parallelStream().forEach(f -> { //
                 try {
                     writer.write(f.toString()); // Пишем в файл
+                    //Так как строк будет миллиард, то будем использовать временные файлы для записи
                 } catch (IOException e) {
 
                 }
