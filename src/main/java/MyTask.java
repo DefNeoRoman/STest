@@ -35,7 +35,7 @@ public class MyTask implements Callable<List<Entity>> {
                             f.toFile().length()));
         });
         List<Entity> res = myfiles.stream().sorted(new EntityComparator()).collect(Collectors.toList());//Сортировку делать сразу,
-        //не надо создавать отдельный лист результатов
+        //не надо создавать отдельный лист результатов (через лямбда - выражеие сделать компаратор)
         //Сортируем по дате, если надо отсортировать в другом порядке, то создаем свой компаратор и в нем  задаем условие сортировки
         return res;
     }
