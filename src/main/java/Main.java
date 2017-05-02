@@ -13,7 +13,8 @@ import java.util.concurrent.Future;
  */
 public class Main {
     final static int tpDepth = 4; // Количество нитей в тредпуле
-    // 4 ядерный процессор = 4 нити (самый минимум),
+    // 4 ядерный процессор = 4 нити (самый минимум),для того чтобы назначить количество нитей в тредпуле, узнать количество ядер в процессоре
+    //есть такой метод, обязательно поискать его.
     // при условии, что в массив аргуемнтов может вводится много путей для поиска
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         PrinterTask pt = new PrinterTask();
@@ -23,10 +24,11 @@ public class Main {
         // сюда будут попадать пути, которые будт после ключа
         int keyPosition = 0;
         List<Entity> result = new ArrayList<>();// ArrayList для результатов
-        for (int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++) {//такой цикл for писать нельзя, надо делать через boolean флажок
             if (args[i].contains("-")) {
                 keyPosition = i;
                 String h = args[i].replaceAll("-", "");//Возможность добавления ключей через еще один if
+                //реплэйсить ничего не надо там же в задании просто знак минус, и после него пробел.
                 ignor.add(h);
                 continue;
             }
@@ -40,6 +42,8 @@ public class Main {
         }
             ExecutorService service = Executors.newFixedThreadPool(tpDepth); // Реализация многопоточности:
             // был создан тредпул из 4 тредов которым выдавались задачи на выполнение, то есть каждый тред на каждый каталог
+        //есть такой ScheduleThreadPool поработать с ним(задачу PrinterTask включить в него тоже) 
+        //отрубать все нити методом shutdown у scheduleThreadPool
             for (String s : myPaths) {
                 MyTask t = new MyTask(s, ignor); //Передаем параметры в задачу
                 Future<List<Entity>> future = service.submit(t); // Кладем в тредпул
@@ -54,9 +58,9 @@ public class Main {
 
                 }
             });
-            writer.close();
-        pt.interrupt();
+            writer.close();//так не пишут - использовать try-with-resources
+        pt.interrupt();//прерывание через shutdown
         System.out.println(" Scan operation is completed count files: " + result.size());
-            System.exit(0);
+            System.exit(0);//По идее этого не требуется, если метод shutdown успешно отработает
     }
 }
