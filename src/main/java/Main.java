@@ -58,6 +58,7 @@ public class Main {
 
                 }
             });
+        //Сгружать отсортированные записи в отдельный файл, а потом делать сортировку слиянием (merge sort)
             writer.close();//так не пишут - использовать try-with-resources
         pt.interrupt();//прерывание через shutdown
         System.out.println(" Scan operation is completed count files: " + result.size());
