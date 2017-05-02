@@ -16,8 +16,8 @@ public class MyTaskTest {
     MyTask t;
     @Before
     public void setUp() throws Exception {
-        service = Executors.newFixedThreadPool(4);
-        File f = new File("file1.txt");
+        service = Executors.newFixedThreadPool(4);//Попробовать поработать с ScheduleThreadPool
+        File f = new File("file1.txt"); //Здесь получать текущую директорию и работать с ней дальше
         FileWriter writer = new FileWriter(f);
         writer.write("hello");
         myTestPath = f.getAbsolutePath();
