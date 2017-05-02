@@ -50,7 +50,8 @@ public class Main {
                 List<Entity> le = future.get();
                 result.addAll(le);
             }
-            FileWriter writer = new FileWriter("result.txt", false);
+            FileWriter writer = new FileWriter("result.txt", false);//Лучше сделать через FileOutPutStream там есть буферизация
+        //И можно установить параметр кодировки UTF-8, то  есть тот который требуется
             result.parallelStream().forEach(f -> { //
                 try {
                     writer.write(f.toString()); // Пишем в файл
