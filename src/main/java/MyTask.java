@@ -1,4 +1,4 @@
-//Как угодно может называться только не MyTask(FileWalker)
+//Как угодно может называться только не MyTask(FileWalkerTask например)
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
