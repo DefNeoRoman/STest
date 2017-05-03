@@ -18,7 +18,7 @@ public class SerialWithEntity {
     public static void main(String[] args) throws IOException{
 
         List<Entity> myfiles = new ArrayList<>();
-        Path startPath = FileSystems.getDefault().getPath("E:\\Roman\\Извещения");
+        Path startPath = FileSystems.getDefault().getPath("E:\\Roman\\");
 
         Files.walk(startPath).forEach(f -> {
             myfiles.add(
@@ -28,37 +28,16 @@ public class SerialWithEntity {
                             f.toFile().length()));
         });
         List<Entity> res = myfiles.stream().sorted(new EntityComparator()).collect(Collectors.toList());
-        FileSort<Entity> sort = new FileSort<Entity>(
 
-                new Iterator<Entity>() {
-                    private int i = 0;
-                   List<Entity> le = res;
 
-                    public boolean hasNext() {
-                        if (i >= 1000) {
-                            System.out.println("generator finish");
-                        }
-                        return i < 1000;
-                    }
+        FileSort<Entity> sort = new FileSort<Entity>(res.iterator());
 
-                    public Entity next() {
-                        i++;
-                        return le.get(i);
-                    }
 
-                    public void remove() {
-                        throw new UnsupportedOperationException();
-                    }
-                });
-        int i = 0;
         // выводим отсортированный результат
         for (Object result : sort) {
-            if (++i % 10000 == 0) {
-                // когда результатов много имеет смысл их вывод отключить
-                // и просто считать количество
-                System.out.println(i);
-            }
-            System.out.println(" == " + res);
+
+            System.out.println(" == " + result);
         }
+
     }
 }
