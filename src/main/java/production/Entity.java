@@ -1,6 +1,9 @@
+package production;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class Entity {
+public class Entity implements Serializable {
     private String fileName;
     private Date createdDate;
     private long size;

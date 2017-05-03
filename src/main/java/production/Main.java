@@ -1,3 +1,5 @@
+package production;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +44,7 @@ public class Main {
         }
             ExecutorService service = Executors.newFixedThreadPool(tpDepth); // Реализация многопоточности:
             // был создан тредпул из 4 тредов которым выдавались задачи на выполнение, то есть каждый тред на каждый каталог
-        //есть такой ScheduleThreadPool поработать с ним(задачу PrinterTask включить в него тоже) 
+        //есть такой ScheduleThreadPool поработать с ним(задачу production.PrinterTask включить в него тоже)
         //отрубать все нити методом shutdown у scheduleThreadPool
             for (String s : myPaths) {
                 MyTask t = new MyTask(s, ignor); //Передаем параметры в задачу

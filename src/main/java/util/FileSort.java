@@ -64,6 +64,7 @@ public class FileSort <T extends Comparable<T>> implements Iterable{
             {
                 iterators.add(part.iterator());
                 for (FileSortStorage f : partFiles) {
+
                     iterators.add(f.iterator());
                 }
                 for (Iterator<T> item : iterators) {

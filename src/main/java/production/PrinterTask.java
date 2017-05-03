@@ -1,3 +1,5 @@
+package production;
+
 public class PrinterTask extends Thread implements Runnable {
     @Override
     public void run() {

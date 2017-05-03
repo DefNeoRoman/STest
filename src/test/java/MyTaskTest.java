@@ -1,5 +1,8 @@
 import org.junit.Before;
 import org.junit.Test;
+import production.Entity;
+import production.MyTask;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;

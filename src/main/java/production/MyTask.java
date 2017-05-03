@@ -1,4 +1,4 @@
-//Как угодно может называться только не MyTask(FileWalkerTask например)
+package production;//Как угодно может называться только не production.MyTask(FileWalkerTask например)
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,7 +22,7 @@ public class MyTask implements Callable<List<Entity>> {
 
         Files.walk(startPath).filter(f -> {  //если добавить .parallel(), то ничего не произойдет
             if (ignorList.contains(f.getFileName().toString())// Здесь нужно 
-               // использовать Set, так как он с методом contains работает сразу Set <Entity>
+               // использовать Set, так как он с методом contains работает сразу Set <production.Entity>
                     ) {
                 return false;
             }
