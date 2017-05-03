@@ -12,6 +12,8 @@ import java.util.concurrent.Future;
  * для хранения данных используем везде ArrayList
  * так как для работы мне понадобятся методы get и set
  * Относительно LinkedList ArrayList работает с этими методами быстрее
+ * В самом начале создать FileStorage,
+ * после чего пройтись по нему итератором, так как в нем лежат сериализуемые объекты
  */
 public class Main {
     final static int tpDepth = 4; // Количество нитей в тредпуле

@@ -21,12 +21,17 @@ public class FileSortStorageObject<T> implements FileSortStorage<T>  {
     /**
      * Сохраняем объекты в файл
      */
-    public void setObjects(List<T> objects) throws IOException {
-        ObjectOutputStream wr = new ObjectOutputStream(new FileOutputStream(file));
-        for (T item : objects) {
-            wr.writeObject(item);
+    public void setObjects(List<T> objects) {
+        try(ObjectOutputStream wr = new ObjectOutputStream(new FileOutputStream(file))){
+
+            for (T item : objects) {
+                wr.writeObject(item);
         }
-        wr.close();
+
+        }catch (IOException e){
+
+        }
+
     }
     /**
      * Итератор по файлу-хранилищу объектов
