@@ -1,4 +1,4 @@
-package production;
+package example;
 
 import java.util.Arrays;
 import java.util.Random;

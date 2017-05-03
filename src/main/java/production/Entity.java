@@ -3,7 +3,7 @@ package production;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Entity implements Serializable {
+public class Entity implements Serializable, Comparable<Entity> {
     private String fileName;
     private Date createdDate;
     private long size;
@@ -48,5 +48,10 @@ public class Entity implements Serializable {
                         " date = " + createdDate +
                         " size = " + size +
                         ']' + "\n";
+    }
+
+    @Override
+    public int compareTo(Entity e) {
+        return createdDate.compareTo(e.getCreatedDate());
     }
 }

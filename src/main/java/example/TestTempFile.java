@@ -1,11 +1,10 @@
-package util;
+package example;
+
+import util.FileSort;
 
 import java.util.Iterator;
 import java.util.Random;
 
-/**
- * Created by Пользователь on 03.05.2017.
- */
 public class TestTempFile {
     public static void main(String[] args) {
         System.out.println("Test start");

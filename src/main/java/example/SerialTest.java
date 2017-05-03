@@ -1,4 +1,4 @@
-package util;
+package example;
 
 import production.Entity;
 
@@ -16,10 +16,10 @@ import java.util.logging.Logger;
 public class SerialTest {
     public static void main(String[] args) {
         try {
-            final Entity en = new Entity("Russia", new Date(),
+             Entity en = new Entity("Moscow", new Date(),
                     4000);
-            final FileOutputStream fos = new FileOutputStream("entity.ser");
-            final ObjectOutputStream oos = new ObjectOutputStream(fos);
+             FileOutputStream fos = new FileOutputStream("entity.ser");
+             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(en);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(SerialTest.class.getName())
