@@ -51,6 +51,7 @@ public class FileSort <T extends Comparable<T>> implements Iterable{
      * Получение результата в виде итератора
      */
     public Iterator<T> iterator() {
+       
         if (partFiles.size() == 0) {
             // маленькая оптимизация, если всё уместилось в память
             return part.iterator();
