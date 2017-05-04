@@ -51,7 +51,7 @@ public class FileSort <T extends Comparable<T>> implements Iterable{
      * Получение результата в виде итератора
      */
     public Iterator<T> iterator() {
-       
+
         if (partFiles.size() == 0) {
             // маленькая оптимизация, если всё уместилось в память
             return part.iterator();
@@ -82,9 +82,9 @@ public class FileSort <T extends Comparable<T>> implements Iterable{
             public boolean hasNext() {
                 if (minIdx == null) {
                     for (int i = 0; i < items.size(); i++) {
-                        if (items.get(i) != null &&
-                                (minIdx == null ||
-                                        items.get(i).compareTo(items.get(minIdx)) < 0)) {
+                        if(items.get(i) != null && (minIdx == null || items.get(i).compareTo(items.get(minIdx)) < 0))
+                        //Значение после compareTo будет меньше нуля, если Элемент вправду меньше
+                        {
                             minIdx = i;
                         }
                     }
@@ -105,7 +105,7 @@ public class FileSort <T extends Comparable<T>> implements Iterable{
                         items.set(minIdx, null);
                     }
                 }
-                minIdx = null;
+                minIdx = null;// Обнуление флага/цифры
                 return res;
             }
             public void remove() {
@@ -121,7 +121,7 @@ public class FileSort <T extends Comparable<T>> implements Iterable{
             part.add((T)source.next());
             if (part.size() >= bufferSize && source.hasNext()) {
                 Collections.sort(part);
-                partFiles.add(new FileSortStorageObject(part));
+
                 part.clear();
             }
         }

@@ -5,28 +5,22 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by Пользователь on 03.05.2017.
+ * Created by Пользователь on 04.05.2017.
  */
-public class FileSortStorageObject<T> implements FileSortStorage<T>  {
-    private final File file;
+public class TempFileStorage<T> implements Iterable<T> {
 
-    /**
-     * Конструктор, создаёт временный файл и сохраняет в него объекты
-     */
-    public FileSortStorageObject(List<T> objects) throws IOException {
-        file = File.createTempFile("FileSort", "dat");
+    private File file;
+
+    public TempFileStorage(File file) throws IOException{
+        this.file = File.createTempFile("FileStorage", "dat");
         file.deleteOnExit();
-        setObjects(objects);
     }
-    /**
-     * Сохраняем объекты в файл
-     */
     public void setObjects(List<T> objects) {
         try(ObjectOutputStream wr = new ObjectOutputStream(new FileOutputStream(file))){
 
             for (T item : objects) {
                 wr.writeObject(item);
-        }
+            }
 
         }catch (IOException e){
 
@@ -75,5 +69,3 @@ public class FileSortStorageObject<T> implements FileSortStorage<T>  {
         file.delete();
     }
 }
-
-
