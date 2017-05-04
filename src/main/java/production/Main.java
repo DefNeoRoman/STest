@@ -26,7 +26,7 @@ public class Main {
     // получаем количество доступных ядер и реализуем тредпул
    // при условии, что в массив аргументов может вводится много путей для поиска
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        String [] argt = new String[10];
+        String [] argt = new String[3];
         argt[0] = "E:\\Roman";
         argt[1] = "-";
         argt[2] = "E:\\Roman\\DontTouchThis";
@@ -40,21 +40,19 @@ public class Main {
 
 
         for (String arg: argt) {
-
+            if (arg.equals("-")) {
+                ignorStart = true;
+            }
             if(!ignorStart){
                 directoryPaths.add(arg);
 
             } else if(ignorStart){
                 ignor.add(arg);
             }
-            if (arg.equals("-")) {
-                ignorStart = true;
 
-
-            }
 
         }
-        for(String d : ignor){
+        for(String d : directoryPaths){
             System.out.println(d);
         }
 

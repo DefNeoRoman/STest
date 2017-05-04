@@ -17,7 +17,7 @@ public class FileWalkerTask implements Callable<List<File>> {
     private String myPath;
     private Set<String> ignorList;
     private int key;
-    private final int bufferSize = 50;//Количество записей в буфере
+    private final int bufferSize = 100;//Количество записей в буфере
     public FileWalkerTask(String myPath, Set<String> ignorList, int key) {
         this.myPath = myPath;
         this.ignorList = ignorList;
@@ -29,15 +29,17 @@ public class FileWalkerTask implements Callable<List<File>> {
         List<Entity> part = new ArrayList<>();//сам буфер
         Path startPath = FileSystems.getDefault().getPath(myPath);
         List<File> lf = new ArrayList<>(); //здесь будем хранить ссылки на файлы
-
-
-        Files.walk(startPath).filter(f -> {  //если добавить .parallel(), то ничего не произойдет
+        System.out.println("before filter");
+        Files.walk(startPath).filter(f -> {
+           //если добавить .parallel(), то ничего не произойдет
             if (ignorList.contains(f.getFileName().toString())// Здесь нужно 
                // использовать Set, так как он с методом contains работает сразу Set <production.Entity>
                     ) {
                 return false;
+            }else{
+                return true;
             }
-            return true;
+
         }).forEach(f -> {
 
                 if(part.size()== bufferSize){
