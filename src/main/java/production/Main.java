@@ -52,12 +52,14 @@ public class Main {
                 MyTask t = new MyTask(s, ignor); //Передаем параметры в задачу
                 Future<List<Entity>> future = service.submit(t); // Кладем в тредпул
                 //Future - это незавершенное задание, подробнее почитать
+                //Положить полученный список в FileStorage
                 List<Entity> le = future.get();
                 result.addAll(le);
             }
             FileWriter writer = new FileWriter("result.txt", false);//Лучше сделать через FileOutPutStream там есть буферизация
         //И можно установить параметр кодировки UTF-8, то  есть тот который требуется
-            result.parallelStream().forEach(f -> { //
+        //здесь достать объекты из FileStorage сделать сортировку слиянием, далее записать их в конечный файл
+            result.forEach(f -> { //
                 try {
                     writer.write(f.toString()); // Пишем в файл
                     //Так как строк будет миллиард, то будем использовать временные файлы для записи
