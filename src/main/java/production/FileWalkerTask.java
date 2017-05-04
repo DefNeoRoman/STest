@@ -29,7 +29,7 @@ public class FileWalkerTask implements Callable<List<File>> {
         List<Entity> part = new ArrayList<>();//сам буфер
         Path startPath = FileSystems.getDefault().getPath(myPath);
         List<File> lf = new ArrayList<>(); //здесь будем хранить ссылки на файлы
-        System.out.println("before filter");
+
         Files.walk(startPath).filter(f -> {
            //если добавить .parallel(), то ничего не произойдет
             if (ignorList.contains(f.getFileName().toString())// Здесь нужно 
@@ -75,7 +75,7 @@ public class FileWalkerTask implements Callable<List<File>> {
         ObjectOutputStream wr = new ObjectOutputStream(new FileOutputStream(endFile));
         wr.writeObject(part);//Дописываем завершающую часть
         lf.add(endFile);
-        System.out.println("endFile written");
+
        //Сортировку делать сразу,
         //не надо создавать отдельный лист результатов (через лямбда - выражеие сделать компаратор)
         //Сортируем по дате, если надо отсортировать в другом порядке, то создаем свой компаратор и в нем  задаем условие сортировки
