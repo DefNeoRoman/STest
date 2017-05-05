@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
-public class FileWalkerTask implements Callable<List<File>> {
+public class FileWalkerTask implements Callable <List<File>> {
     private String myPath;
     private Set<String> ignorList;
     private int key;
@@ -31,9 +31,9 @@ public class FileWalkerTask implements Callable<List<File>> {
         List<File> lf = new ArrayList<>(); //здесь будем хранить ссылки на файлы
 
         Files.walk(startPath).filter(f -> {
-           //если добавить .parallel(), то ничего не произойдет
-            if (ignorList.contains(f.getFileName().toString())// Здесь нужно 
-               // использовать Set, так как он с методом contains работает сразу Set <production.Entity>
+            //если добавить .parallel(), то ничего не произойдет
+            if (ignorList.contains(f.getFileName().toString())// Здесь нужно
+                // использовать Set, так как он с методом contains работает сразу Set <production.Entity>
                     ) {
                 return false;
             }else{
@@ -42,31 +42,31 @@ public class FileWalkerTask implements Callable<List<File>> {
 
         }).forEach(f -> {
 
-                if(part.size()== bufferSize){
-                    try{
-                        File file = File.createTempFile("FileStorage"+key+f.hashCode(), "dat");
-                        try(ObjectOutputStream wr = new ObjectOutputStream(new FileOutputStream(file))){
+            if(part.size()== bufferSize){
+                try{
+                    File file = File.createTempFile("FileStorage"+key+f.hashCode(), "dat");
+                    try(ObjectOutputStream wr = new ObjectOutputStream(new FileOutputStream(file))){
 
-                              wr.writeObject(part);
-                              lf.add(file);
-                              key = key*key+9;
-                            System.out.println("50 files was written");
-                            part.clear();
-                        }catch(IOException e){
-
-                        }
+                        wr.writeObject(part);
+                        lf.add(file);
+                        key = key*key+9;
+                        System.out.println("50 files was written");
+                        part.clear();
                     }catch(IOException e){
 
                     }
+                }catch(IOException e){
+
+                }
 
 
             } else{
-                    part.add(
-                            new Entity(
-                                    f.getFileName().toString(),
-                                    new Date(f.toFile().lastModified()),
-                                    f.toFile().length()));
-                }
+                part.add(
+                        new Entity(
+                                f.getFileName().toString(),
+                                new Date(f.toFile().lastModified()),
+                                f.toFile().length()));
+            }
 
 
 
@@ -75,8 +75,7 @@ public class FileWalkerTask implements Callable<List<File>> {
         ObjectOutputStream wr = new ObjectOutputStream(new FileOutputStream(endFile));
         wr.writeObject(part);//Дописываем завершающую часть
         lf.add(endFile);
-
-       //Сортировку делать сразу,
+        //Сортировку делать сразу,
         //не надо создавать отдельный лист результатов (через лямбда - выражеие сделать компаратор)
         //Сортируем по дате, если надо отсортировать в другом порядке, то создаем свой компаратор и в нем  задаем условие сортировки
 

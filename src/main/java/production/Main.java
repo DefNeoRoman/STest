@@ -1,4 +1,6 @@
 package production;
+import util.FileSort;
+
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -20,18 +22,23 @@ public class Main {
     private static FileWriter writer;
     // получаем количество доступных ядер и реализуем тредпул
    // при условии, что в массив аргументов может вводится много путей для поиска
-    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-
+    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException, ClassNotFoundException {
+        String[] argt = new String[3];
+        argt[0] = "D:\\forJava\\Articles";
+        argt[1] = "-";
+        argt[2] = "D:\\forJava\\Articles\\LectionJRush";
+        List<File> partFiles = new ArrayList<>();// ArrayList для результатов
+        File resultFile = File.createTempFile("File", "dat");
         PrinterTask pt = new PrinterTask();//Здесь создаем нить которая будет выводить точки и палочки
         List<String> directoryPaths = new ArrayList<>(); //массив для входных параметров, сюда будут попадать пути до ключа
         Set<String> ignor = new HashSet<>(); //Массив для файлов, которые будем игнорировать,
         // сюда будут попадать пути, которые будут после ключа
         // (Выбрали множество HashSet, так как в нем метод contains() работает сразу )
         boolean ignorStart = false;
-        List<File> partFiles = new ArrayList<>();// ArrayList для результатов
 
 
-        for (String arg: args) {
+
+        for (String arg: argt) {
             if (arg.equals("-")) {
                 ignorStart = true;
             }
@@ -54,53 +61,50 @@ public class Main {
         //Также выделяются ресурсы для выполнения печатающей задачи
        //отрубать все нити методом shutdown у scheduleThreadPool
             int count = 1; // счетчик чтобы файлы Storage не спутались
-            for (String s : directoryPaths) {
-                FileWalkerTask t = new FileWalkerTask(s, ignor,count); //Передаем параметры в задачу
-                count++;
-                //random - это рандомный номер файла
-                Future<List<File>> future = service.submit(t); // Кладем в тредпул
-                //Future - это незавершенное задание, подробнее почитать
-                //Положить полученный список в FileStorage
-                System.out.println("ready to Get Future");
-                List<File> le = future.get();
-                partFiles.addAll(le);
 
-            }
+        for (String s : directoryPaths) {
+            FileWalkerTask t = new FileWalkerTask(s, ignor,count); //Передаем параметры в задачу
+            count++;
+            //random - это рандомный номер файла
+            Future<List<File>> future = service.submit(t); // Кладем в тредпул
+            //Future - это незавершенное задание, подробнее почитать
+            //Положить полученный список в FileStorage
+            System.out.println("ready to Get Future");
+            List<File> le = future.get();
+            partFiles.addAll(le);
 
-           //Лучше сделать через FileOutPutStream там есть буферизация
+        }
+
+        //Лучше сделать через FileOutPutStream там есть буферизация
         //И можно установить параметр кодировки UTF-8, то  есть тот который требуется
         //здесь достать объекты из FileStorage сделать сортировку слиянием, далее записать их в конечный файл
 
         //Сгружать отсортированные записи в отдельный файл, а потом делать сортировку слиянием (merge sort)
-      writer = new FileWriter("result.txt", false);
+        writer = new FileWriter("result.txt", false);
         sortAndWrite(partFiles);
-      service.shutdown();
+        service.shutdown();
         System.out.println(" Scan operation is completed");
-            System.exit(0);//По идее этого не требуется, если метод shutdown успешно отработает
+        System.exit(0);//По идее этого не требуется, если метод shutdown успешно отработает
     }
-    public static void sortAndWrite(List<File> lf) throws IOException{
-            Entity currentEntity = new Entity();
+    public static void sortAndWrite(List<File> lf) throws IOException, ClassNotFoundException{
 
-            for (File f: lf){
-
-                try (FileInputStream fin = new FileInputStream(f)){
-                    ObjectInputStream ois = new ObjectInputStream(fin);
-
-                    TreeSet<Entity> len = (TreeSet<Entity>) ois.readObject();
-
-                    Entity enToRemove = len.stream().min(Entity::compareTo).get();
-                    if(currentEntity.compareTo(enToRemove) > 0 ){
-                        currentEntity = enToRemove;
-                        len.remove(enToRemove);
-
+        FileSort<Entity> fe = new FileSort<Entity>(
+                new Iterator<Entity>() {
+                    @Override
+                    public boolean hasNext() {
+                        return false;
                     }
-                } catch(Exception g){
 
-                }
-            }
+                    @Override
+                    public Entity next() {
 
-              writer.write(currentEntity.toString());
+                        return null;
+
+                        };
+                    }
+
+        );
+    }}
 
 
-    }
-}
+
