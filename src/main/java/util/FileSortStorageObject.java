@@ -4,7 +4,10 @@ import java.io.*;
 import java.util.Iterator;
 import java.util.List;
 
-public class FileSortStorageObject<T> implements FileSortStorage<T>{
+/**
+ * Created by Пользователь on 05.05.2017.
+ */
+public class FileSortStorageObject<T> implements FileSortStorage<T> {
     private final File file;
 
     /**
@@ -18,17 +21,13 @@ public class FileSortStorageObject<T> implements FileSortStorage<T>{
     /**
      * Сохраняем объекты в файл
      */
-
-    @Override
     public void setObjects(List<T> objects) throws IOException {
         ObjectOutputStream wr = new ObjectOutputStream(new FileOutputStream(file));
         for (T item : objects) {
             wr.writeObject(item);
         }
         wr.close();
-
     }
-
     /**
      * Итератор по файлу-хранилищу объектов
      */

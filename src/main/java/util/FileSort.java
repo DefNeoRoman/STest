@@ -118,7 +118,7 @@ public class FileSort<T extends Comparable<T>> implements Iterable<T> {
             part.add((T)source.next());
             if (part.size() >= bufferSize && source.hasNext()) {
                 Collections.sort(part);
-                partFiles.add(new FileSortStorageObject(part));
+
                 part.clear();
             }
         }

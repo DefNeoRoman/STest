@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
-public class FileWalkerTask implements Callable <List<File>> {
+public class FileWalkerTask implements Callable <List<IterableEntity>> {
     private String myPath;
     private Set<String> ignorList;
     private int key;
@@ -24,11 +24,11 @@ public class FileWalkerTask implements Callable <List<File>> {
         this.key = key;
     }
     @Override
-    public List<File> call() throws Exception {
+    public List<IterableEntity> call() throws Exception {
 
         List<Entity> part = new ArrayList<>();//сам буфер
         Path startPath = FileSystems.getDefault().getPath(myPath);
-        List<File> lf = new ArrayList<>(); //здесь будем хранить ссылки на файлы
+        List<IterableEntity> lfresult = new ArrayList<>(); //здесь будем хранить ссылки на файлы
 
         Files.walk(startPath).filter(f -> {
             //если добавить .parallel(), то ничего не произойдет
@@ -48,7 +48,7 @@ public class FileWalkerTask implements Callable <List<File>> {
                     try(ObjectOutputStream wr = new ObjectOutputStream(new FileOutputStream(file))){
 
                         wr.writeObject(part);
-                        lf.add(file);
+                        lfresult.add(new IterableEntity());
                         key = key*key+9;
                         System.out.println("50 files was written");
                         part.clear();
@@ -74,11 +74,11 @@ public class FileWalkerTask implements Callable <List<File>> {
         File endFile = File.createTempFile("endFile"+key+part.hashCode(),"dat");
         ObjectOutputStream wr = new ObjectOutputStream(new FileOutputStream(endFile));
         wr.writeObject(part);//Дописываем завершающую часть
-        lf.add(endFile);
+        lfresult.add(new IterableEntity());
         //Сортировку делать сразу,
         //не надо создавать отдельный лист результатов (через лямбда - выражеие сделать компаратор)
         //Сортируем по дате, если надо отсортировать в другом порядке, то создаем свой компаратор и в нем  задаем условие сортировки
 
-        return lf;
+        return lfresult;
     }
 }

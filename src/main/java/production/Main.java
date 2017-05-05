@@ -24,11 +24,11 @@ public class Main {
    // при условии, что в массив аргументов может вводится много путей для поиска
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException, ClassNotFoundException {
         String[] argt = new String[3];
-        argt[0] = "D:\\forJava\\Articles";
+        argt[0] = "E:\\Roman";
         argt[1] = "-";
-        argt[2] = "D:\\forJava\\Articles\\LectionJRush";
-        List<File> partFiles = new ArrayList<>();// ArrayList для результатов
-        File resultFile = File.createTempFile("File", "dat");
+        argt[2] = "E:\\Roman\\DontTouchThis";
+        Set<IterableEntity> partFiles = new TreeSet<>();// ArrayList для результатов
+
         PrinterTask pt = new PrinterTask();//Здесь создаем нить которая будет выводить точки и палочки
         List<String> directoryPaths = new ArrayList<>(); //массив для входных параметров, сюда будут попадать пути до ключа
         Set<String> ignor = new HashSet<>(); //Массив для файлов, которые будем игнорировать,
@@ -66,11 +66,11 @@ public class Main {
             FileWalkerTask t = new FileWalkerTask(s, ignor,count); //Передаем параметры в задачу
             count++;
             //random - это рандомный номер файла
-            Future<List<File>> future = service.submit(t); // Кладем в тредпул
+            Future<List<IterableEntity>> future = service.submit(t); // Кладем в тредпул
             //Future - это незавершенное задание, подробнее почитать
             //Положить полученный список в FileStorage
             System.out.println("ready to Get Future");
-            List<File> le = future.get();
+            List<IterableEntity> le = future.get();
             partFiles.addAll(le);
 
         }
@@ -86,25 +86,24 @@ public class Main {
         System.out.println(" Scan operation is completed");
         System.exit(0);//По идее этого не требуется, если метод shutdown успешно отработает
     }
-    public static void sortAndWrite(List<File> lf) throws IOException, ClassNotFoundException{
+    public static void sortAndWrite(Set<IterableEntity> lf) throws IOException, ClassNotFoundException{
 
-        FileSort<Entity> fe = new FileSort<Entity>(
-                new Iterator<Entity>() {
-                    @Override
-                    public boolean hasNext() {
-                        return false;
-                    }
+        FileSort<Entity> fsen = new FileSort<Entity>(lf.iterator().next().iterator());
+        //Лист из файлов
+        // -> нужно получить файл -> десериализовать из
+        // него List<Entity>
+        // -> из него получить Entity и передать в сортировщик
+        fsen.forEach(entity -> {
+            try {
+                writer.write(entity.toString());
+            }catch(Exception e){
 
-                    @Override
-                    public Entity next() {
+            }
 
-                        return null;
+        });
 
-                        };
-                    }
-
-        );
-    }}
+    }
+}
 
 
 
