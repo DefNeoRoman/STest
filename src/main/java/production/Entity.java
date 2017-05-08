@@ -52,6 +52,6 @@ public class Entity implements Serializable, Comparable<Entity> {
 
     @Override
     public int compareTo(Entity e) {
-        return createdDate.compareTo(e.getCreatedDate());
+        return (int)(size - e.getSize());
     }
 }

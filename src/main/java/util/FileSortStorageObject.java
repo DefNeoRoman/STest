@@ -10,9 +10,12 @@ import java.util.List;
 public class FileSortStorageObject<T> implements FileSortStorage<T> {
     private final File file;
 
+
+
     /**
      * Конструктор, создаёт временный файл и сохраняет в него объекты
      */
+
     public FileSortStorageObject(List<T> objects) throws IOException {
         file = File.createTempFile("FileSort", "dat");
         file.deleteOnExit();
