@@ -3,7 +3,7 @@ package production;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Entity implements Serializable, Comparable<Entity> {
+public class Entity implements Serializable, Comparable<Entity> { //Не нуждается в тесте
     private String fileName;
     private Date createdDate;
     private long size;
@@ -52,6 +52,6 @@ public class Entity implements Serializable, Comparable<Entity> {
 
     @Override
     public int compareTo(Entity e) {
-        return (int)(size - e.getSize());
+        return (int) (size - e.getSize());//Сортируем по размеру
     }
 }

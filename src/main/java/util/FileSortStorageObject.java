@@ -3,19 +3,12 @@ package util;
 import java.io.*;
 import java.util.Iterator;
 import java.util.List;
-
-/**
- * Created by Пользователь on 05.05.2017.
- */
+//Частица результата
 public class FileSortStorageObject<T> implements FileSortStorage<T> {
     private final File file;
-
-
-
     /**
      * Конструктор, создаёт временный файл и сохраняет в него объекты
      */
-
     public FileSortStorageObject(List<T> objects) throws IOException {
         file = File.createTempFile("FileSort", "dat");
         file.deleteOnExit();
@@ -24,12 +17,14 @@ public class FileSortStorageObject<T> implements FileSortStorage<T> {
     /**
      * Сохраняем объекты в файл
      */
-    public void setObjects(List<T> objects) throws IOException {
-        ObjectOutputStream wr = new ObjectOutputStream(new FileOutputStream(file));
-        for (T item : objects) {
-            wr.writeObject(item);
+    public void setObjects(List<T> objects){
+        try(ObjectOutputStream wr = new ObjectOutputStream(new FileOutputStream(file)) ) {
+            for (T item : objects) {
+                wr.writeObject(item);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        wr.close();
     }
     /**
      * Итератор по файлу-хранилищу объектов

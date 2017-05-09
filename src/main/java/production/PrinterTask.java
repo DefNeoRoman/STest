@@ -1,9 +1,7 @@
 package production;
 
-import java.util.concurrent.Callable;
-
 public class PrinterTask extends Thread implements Runnable {
-
+//Этот Thread печатает точки и палочки в тестах не нуждается
     @Override
     public void run() {
         try {
