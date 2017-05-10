@@ -3,14 +3,14 @@ package util;
 import java.io.*;
 import java.util.Iterator;
 import java.util.List;
-//Частица результата
+//Часть результата
 public class FileSortStorageObject<T> implements FileSortStorage<T> {
     private final File file;
     /**
      * Конструктор, создаёт временный файл и сохраняет в него объекты
      */
     public FileSortStorageObject(List<T> objects) throws IOException {
-        file = File.createTempFile("FileSort", "dat");
+        file = File.createTempFile("fileSort", "dat");
         file.deleteOnExit();
         setObjects(objects);
     }
@@ -60,12 +60,6 @@ public class FileSortStorageObject<T> implements FileSortStorage<T> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-    /**
-     * Зачищаем
-     */
-    protected void finalize() {
-        file.delete();
     }
 }
 

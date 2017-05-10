@@ -9,31 +9,25 @@ import java.util.*;
 import java.util.concurrent.Callable;
 
 public class FileWalkerTask implements Callable<List<FileSortStorageObject>> {
-    private String searchPath; //Директория поиска
-    private Set<String> ignorList; //Список файлов для игнорирования
-    private final int bufferSize = 10000;//Количество записей в буфере(Он же Storage)
+    private String searchPath;                    //Директория поиска
+    private Set<String> ignoreList;               //Список файлов для игнорирования исправить ignore
+    private static final int BUFFER_SIZE = 1000;  //Количество записей в буфере(Он же Storage) большими буквами констаета в одно месте
 
-    public FileWalkerTask(String searchPath, Set<String> ignorList) {
+    public FileWalkerTask(String searchPath, Set<String> ignoreList) {
         this.searchPath = searchPath;
-        this.ignorList = ignorList;
+        this.ignoreList = ignoreList;
     }
     @Override
     public List<FileSortStorageObject> call() throws Exception {
         List<Entity> part = new ArrayList<>();//сам буфер
-        List<FileSortStorageObject> resultList = new ArrayList<>(); //здесь храним частицы результата
+        List<FileSortStorageObject> resultList = new ArrayList<>(); //здесь храним части результата
         Path startPath = FileSystems.getDefault().getPath(searchPath);//Получаем объект Path
-        Files.walk(startPath).filter(f -> {
-            if (ignorList.contains(f.getFileName().toString())) {
-                // Здесь используем Set, так как он с методом contains работает лучше
-                return false;
-            } else {
-                return true;
-            }
-        }).forEach(f -> { //Для каждого полученного после фильтра файла
-            if (part.size() == bufferSize) { //если буфер переполнен
-                Collections.sort(part); //Сортируем быстрой сортировкой частицу (как сортировать описано в интерфейсе Comparable)
+        Files.walk(startPath).filter(f -> !ignoreList.contains(f.getFileName().toString()))
+                .forEach(f -> { //Для каждого полученного после фильтра файла
+            if (part.size() == BUFFER_SIZE) { //если буфер переполнен
+                Collections.sort(part); //Сортируем быстрой сортировкой часть
                 try {
-                    resultList.add(new FileSortStorageObject(part));//и добавляем в хранилище
+                    resultList.add(new FileSortStorageObject(part));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -41,7 +35,7 @@ public class FileWalkerTask implements Callable<List<FileSortStorageObject>> {
                 part.add(new Entity(f.getFileName().toString(), new Date(f.toFile().lastModified()),f.toFile().length()));
             }
         });
-        resultList.add(new FileSortStorageObject(part));
+        resultList.add(new FileSortStorageObject(part));//незавершенная часть
         return resultList;
     }
 }

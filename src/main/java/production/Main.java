@@ -19,11 +19,12 @@ import java.util.concurrent.Future;
  * Относительно LinkedList, ArrayList работает с этими методами быстрее
  */
 public class Main {
-    final static int tpDepth = Runtime.getRuntime().availableProcessors(); // Количество нитей в тредпуле
-    // получаем количество доступных ядер и реализуем тредпул
-    // при условии, что в массив аргументов может вводится много путей для поиска
+    final static int tpDepth = Runtime.getRuntime().availableProcessors();
+
     public static void main(String[] args) throws InterruptedException, ExecutionException, ClassNotFoundException {
-        List<FileSortStorageObject> storage = new ArrayList<>();//Общее хранилище куда заходят частички со всех задач
+        File resFile = new File("result.txt");   //создаем результирующий файд
+        List<Future> futures = new ArrayList<>();
+        List<FileSortStorageObject> storage = new ArrayList<>();//Общее хранилище куда заходят части со всех задач
         PrinterTask pt = new PrinterTask();//Здесь создаем нить которая будет выводить точки и палочки
         List<String> directoryPaths = new ArrayList<>(); //массив для входных параметров, сюда будут попадать пути до ключа
         Set<String> ignor = new HashSet<>(); //Массив для файлов, которые будем игнорировать,
@@ -48,31 +49,29 @@ public class Main {
         service.submit(pt); //Запускаем задачу на выполнение
         // был создан тредпул из tpDepth тредов которым выдавались задачи на выполнение, то есть каждый тред на каждый каталог
         //Также выделяются ресурсы для выполнения печатающей задачи
-        //метод shutdown() отключит все нити у тредпула
-
         for (String s : directoryPaths) { //Итерируем по полученным спискам
             FileWalkerTask t = new FileWalkerTask(s, ignor); //Передаем параметры в задачу
             Future<List<FileSortStorageObject>> future = service.submit(t);// результат получаем в виде списка частичек
             //Future - это незавершенное задание, подробнее почитать
             //Положить полученный список в FileStorage
-            storage.addAll(future.get());
+            futures.add(future);
         }
-
-        FileSort fs = new FileSort();// Инициализируем сортировщик
-        for (int i = 0; i < storage.size(); i++) { //Запускаем иетратор по сортировщику
-            fs.addPartFiles(storage.get(i)); // , для того чтобы каждая запись доставлась по одному в отсортированном порядке
-        }
-        File resFile = new File("result.txt");//создаем результирующий файд
+      for(Future<List<FileSortStorageObject>>future: futures){
+          storage.addAll(future.get());
+      }
+        FileSort fs = new FileSort();
+        storage.forEach(fso -> {
+            fs.addPartFiles(fso);
+        });
         try (Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(resFile), "UTF8"))) {
             for (Object e : fs) {
                 out.append(e.toString());
-
             }
         } catch (IOException t) {
             t.printStackTrace();
         }
         //записываем в буферизированном потоке получившиеся в файл с кодировкой UTF-8
-        service.shutdown();//выключаем тредпул
+        service.shutdown();
         System.out.println(" Scan operation is completed");
         System.exit(0);//Завершение программы
     }
