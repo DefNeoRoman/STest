@@ -9,13 +9,13 @@
 <h3> 3. Допустим, итоговый файл выглядит так (формат вывода должен быть именно таким как в этом примере): </h3>
 <hr>
 
-*[file = \\epbyminsd0235\Video Materials\.DS_Store date = 2011.07.20 size = 6148]
-*[file = \\epbyminsd0235\Video Materials\2008.ivc date = 2008.12.12 size = 415892]
-*[file = \\epbyminsd0235\Video Materials\CDP DAM.ivc date = 2009.01.29 size = 3207246]
+*[file = \\epbyminsd0235\Video Materials\.DS_Store date = 2011.07.20 size = 6148]*
+*[file = \\epbyminsd0235\Video Materials\2008.ivc date = 2008.12.12 size = 415892]*
+*[file = \\epbyminsd0235\Video Materials\CDP DAM.ivc date = 2009.01.29 size = 3207246]*
 *[file = \\epbyminsd0235\Video Materials\.NET Mentoring Program\Acceptance Testing Through UI\2010-01-19 10.13 Acceptance Testing.wmv 
-*date = 2010.01.19 size = 22904839]
+*date = 2010.01.19 size = 22904839]*
 *[file = \\epbyminsd0235\Video Materials\.NET Mentoring Program\Acceptance Testing Through UI\2010-01-19 10.50 Acceptance Testing.wmv 
-*date = 2010.01.19 size = 106224657] 
+*date = 2010.01.19 size = 106224657] *
 
 <h3>4. Чтобы было понятно как делать нельзя, приводим разъяснения по целевому способу использования программы. </h3>
 
