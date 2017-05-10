@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.Callable;
 
@@ -21,7 +22,7 @@ public class FileWalkerTask implements Callable<List<FileSortStorageObject>> {
     public List<FileSortStorageObject> call() throws Exception {
         List<Entity> part = new ArrayList<>();//сам буфер
         List<FileSortStorageObject> resultList = new ArrayList<>(); //здесь храним части результата
-        Path startPath = FileSystems.getDefault().getPath(searchPath);//Получаем объект Path
+        Path startPath = Paths.get(searchPath);//Получаем объект Path
         Files.walk(startPath).filter(f -> !ignoreList.contains(f.getFileName().toString()))
                 .forEach(f -> { //Для каждого полученного после фильтра файла
             if (part.size() == BUFFER_SIZE) { //если буфер переполнен
