@@ -1,6 +1,6 @@
 package production;
 
-public class PrinterTask extends Thread implements Runnable {
+public class PrinterTask implements Runnable {
 //Этот Thread печатает точки и палочки
     @Override
     public void run() {

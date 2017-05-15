@@ -4,13 +4,11 @@ import java.io.IOException;
 import java.util.*;
 
 public class FileSort<T extends Comparable<T>> implements Iterable<T> {
-
     //это класс сортировщик, который рабооатет со всеми объектами, котрые реализуют интерфейс Comparable
-    private int bufferSize = 10000; //Размер буфера
-    private List<FileSortStorage> partFiles = new ArrayList<>(); //Частицы файлов
-    private Iterator<T> source;// Инициализирующий итератор
-    private List<T> part = new ArrayList<T>();//Часть которая сохраняется
-
+    private int bufferSize = 10000;                                 //Размер буфера
+    private List<FileSortStorage> partFiles = new ArrayList<>();    //Части результата
+    private Iterator<T> source;                                     // Инициализирующий итератор
+    private List<T> part = new ArrayList<T>();                      //Часть которая сохраняется
     public FileSort() {
     }
     /**
@@ -23,13 +21,13 @@ public class FileSort<T extends Comparable<T>> implements Iterable<T> {
      * Установка источника данных, используется итератор
      */
     public void setSource(Iterator<T> newSource) {
-        source = newSource;//по идее должно быть this.source
+        source = newSource;
         try {
-            sortParts(); //идем в метод sortparts
+            sortParts();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Collections.sort(part);//сортировка
+        Collections.sort(part);                     //сортировка
     }
     /**
      * Получение результата в виде итератора
@@ -47,14 +45,15 @@ public class FileSort<T extends Comparable<T>> implements Iterable<T> {
             List<T> items = new ArrayList<T>();
             List<Iterator<T>> iterators = new ArrayList<Iterator<T>>();
             Integer minIdx = null;
-            // динамическая инициализация итератора, вместо конструктора
+                                                    // динамическая инициализация итератора, вместо конструктора
             {
                 iterators.add(part.iterator());     // всегда остается незавершенная часть
-                // (так как буфер переполняется невсегда) из незавершенной части тоже получаем итератор и кладем в список итераторов
+                                                    // (так как буфер переполняется невсегда) из незавершенной
+                                                    // части тоже получаем итератор и кладем в список итераторов
                 for (FileSortStorage f : partFiles) {
                     iterators.add(f.iterator());     //здесь кладем наполненные итераторы
                 }
-                for (Iterator<T> item : iterators) {
+                for (Iterator<T> item : iterators) { //Всегда возвращаем элемент с минимальным индекосм
                     if (item.hasNext()) {
                         items.add(item.next());
                     }
@@ -95,16 +94,17 @@ public class FileSort<T extends Comparable<T>> implements Iterable<T> {
             }
             public void remove() {
                 throw new UnsupportedOperationException();
-//Этот метод не реализуется нигде, всегда нужно выбрасывать это исключение
+                        //Этот метод не реализуется нигде, всегда нужно выбрасывать это исключение
             }
         };
     }
     /**
      * Производит чтение исходных данных с сохранением блоков во временные файлы
+     * этот метод задейсвтован, если сортировщик запущен не с пустым конструктором
      */
     void sortParts() throws IOException {
-        while (source.hasNext()) { // source - это Iterator
-            part.add((T) source.next()); // part - это LinkedList<T>
+        while (source.hasNext()) {                               // source - это Iterator
+            part.add((T) source.next());                         // part - это LinkedList<T>
             if (part.size() >= bufferSize && source.hasNext()) {
                 Collections.sort(part);
                 partFiles.add(new FileSortStorageObject(part));
